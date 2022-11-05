@@ -11,6 +11,8 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DrawingPanel extends JPanel {
 
@@ -56,14 +58,14 @@ public class DrawingPanel extends JPanel {
         this.setFocusable(true);
     }
 
-
-
-
     public void paint (Graphics g) {
         super.paint(g);
 
         Graphics2D g2 = (Graphics2D)g;
         drawField(g2);
+
+        drawClicked(g2);
+
 
         try {
             drawCheckers(checkers, g2);
@@ -104,15 +106,15 @@ public class DrawingPanel extends JPanel {
         for(int x = 0; x < newCheckers.length; x++){
             for(int y = 0; y < newCheckers[x].length; y++){
 
-                if(newCheckers[x][y] == 1){
-                    coordX = nullX + y * cellSize;
-                    coordY = nullY + x * cellSize;
+                if(newCheckers[y][x] == 1){
+                    coordX = nullX + x * cellSize;
+                    coordY = nullY + y * cellSize;
                     drawChecker(g2, coordX, coordY, "white_checker.png");
                 }
 
-                if(newCheckers[x][y] == 2){
-                    coordX = nullX + y * cellSize;
-                    coordY = nullY + x * cellSize;
+                if(newCheckers[y][x] == 2){
+                    coordX = nullX + x * cellSize;
+                    coordY = nullY + y * cellSize;
                     drawChecker(g2, coordX, coordY, "black_checker.png");
                 }
 
@@ -127,7 +129,7 @@ public class DrawingPanel extends JPanel {
         for(int x = 0; x < checkers.length; x++) {
             int newY = 7;
             for (int y = 0; y < checkers[0].length; y++) {
-                newCheckers[newX][newY] = checkers[x][y];
+                newCheckers[newY][newX] = checkers[y][x];
                 newY--;
             }
             newX--;
@@ -135,6 +137,23 @@ public class DrawingPanel extends JPanel {
         }
 
         return newCheckers;
+    }
+
+    private void drawClicked(Graphics2D g2){
+
+        if(isClicked){
+            g2.setColor(new Color(79, 177, 105));
+            System.out.println("Print clicked ");
+            g2.fillRect(cellSize * clickedCell.getCoord().getX(), cellSize * clickedCell.getCoord().getY(), cellSize, cellSize);
+            for(int i = 0; i < clickedCell.getPotencialPath().size(); i++){
+                CoordXY coord = clickedCell.getPotencialPath().get(i);
+                g2.fillRect(cellSize * coord.getX(), cellSize * coord.getY(), cellSize, cellSize);
+            }
+
+        }
+        else{
+            System.out.println("Not clicked ");
+        }
 
     }
 
@@ -152,23 +171,52 @@ public class DrawingPanel extends JPanel {
         int xCell = x/75;
         int yCell = y/75;
 
+        int mirrorXCell = xCell;
+        int mirrorYCell = yCell;// is mirrored if player has white side
+
         if(Player.side == 1){
-            xCell = mirrowList[xCell];
-            yCell = mirrowList[yCell];
+            mirrorXCell = mirrowList[xCell];
+            mirrorYCell = mirrowList[yCell];
         }
 
-        if(checkers[xCell][yCell] == Player.side){
+        if(checkers[mirrorYCell][mirrorXCell] == Player.side){
             isClicked = true;
-            clickedCell.setX(xCell);
-            clickedCell.setY(yCell);
+
+            CoordXY coordXY = new CoordXY();
+
+            coordXY.setX(xCell);
+            coordXY.setY(yCell);
+            clickedCell.setCoord(coordXY);
+            possibleMoves(clickedCell);
             System.out.println("Your check");
+            repaint();
         }
 
-        System.out.println(checkers[xCell][yCell]);
+        System.out.println(checkers[yCell][xCell]);
 
         System.out.println(xCell + " - x, " + yCell + " - y");
     }
 
+    private void possibleMoves(ClickedCell clickedCell){
+        CoordXY coord = clickedCell.getCoord();
+        List<CoordXY> coords = new ArrayList<>();
 
+        if(Player.side == 2){
+            if(coord.getX() != 0){
+                if(coord.getY() != 0){
+                    if(coord.getX() != 7){
+                        if(checkers[coord.getY() - 1][coord.getX() - 1] == 0){
+                            coords.add(new CoordXY(coord.getX() - 1, coord.getY() - 1));
+                        }
+                        if(checkers[coord.getY() - 1][coord.getX() + 1] == 0){
+                            coords.add(new CoordXY(coord.getX() + 1, coord.getY() - 1));
+                        }
+                    }
+                }
+            }
+        }
+
+        clickedCell.setPotencialPath(coords);
+    }
 
 }

@@ -1,23 +1,27 @@
 package pckg;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClickedCell {
 
-    int x;
-    int y;
+    CoordXY coord = new CoordXY();
+    List<CoordXY> potencialPath = new ArrayList();
 
-    public int getX() {
-        return x;
+
+    public CoordXY getCoord() {
+        return coord;
     }
 
-    public int getY() {
-        return y;
+    public void setCoord(CoordXY coord) {
+        this.coord = coord;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public List<CoordXY> getPotencialPath() {
+        return potencialPath;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void setPotencialPath(List<CoordXY> potencialPath) {
+        this.potencialPath = potencialPath;
     }
 }
