@@ -58,6 +58,54 @@ public class DrawingPanel extends JPanel {
         this.setFocusable(true);
     }
 
+    public void mouseClick(int x, int y){
+
+        int xCell = x/75;
+        int yCell = y/75;
+
+        CoordXY mirrorCoord = new CoordXY(xCell, yCell);;
+
+        if(Player.side == 1){
+            mirrorCoord = mirroredCoord(xCell, yCell); // coords for sending to server
+        }
+
+        if(isClicked){
+            List<CoordXY> path = clickedCell.getPotencialPath();
+            for(int i = 0; i < path.size(); i++){
+                if(path.get(i).getX() == mirrorCoord.getX() && path.get(i).getY() == mirrorCoord.getY()){
+
+                    CoordXY endXY = new CoordXY(path.get(i).getX(), path.get(i).getY());
+                    CoordXY startXY = new CoordXY(clickedCell.getCoord().getX(), clickedCell.getCoord().getY());
+
+                    if(Player.side == 1){ // mirror end because here we working with matrix on "server"
+                        endXY = mirroredCoord(path.get(i).getX(), path.get(i).getY());
+                        startXY = mirroredCoord(clickedCell.getCoord().getX(), clickedCell.getCoord().getY());
+                    }
+
+                    moveChecker(startXY, endXY);
+                    clickedCell = new ClickedCell();
+                    isClicked = false;
+
+                }
+            }
+        }
+
+        if(checkers[mirrorCoord.getY()][mirrorCoord.getX()] == Player.side){
+            isClicked = true;
+
+            CoordXY coordXY = new CoordXY();
+            coordXY.setX(xCell);
+            coordXY.setY(yCell);
+            clickedCell.setCoord(coordXY);
+            possibleMoves(clickedCell);
+            System.out.println("Your check");
+            repaint();
+
+        }
+
+        System.out.println(mirrorCoord.getX() + " - x, " + mirrorCoord.getY() + " - y");
+    }
+
     public void paint (Graphics g) {
         super.paint(g);
 
@@ -164,58 +212,60 @@ public class DrawingPanel extends JPanel {
 
     }
 
-    public void mouseClick(int x, int y){
-        System.out.println(x + " - x, " + y + " - y");
+
+
+    private void moveChecker(CoordXY start, CoordXY end){
+
+        System.out.println(start.getX() + " x " +  start.getY() + " y  odstranen");
+        checkers[start.getY()][start.getX()] = 0;
+        checkers[end.getY()][end.getX()] = Player.side;
+
+    }
+
+    /**
+     * On server coordes ar stored in matrix. This matrix is one for both sides
+     * thats why if player is on white side, whe need to send on server mirrored coords
+     * this method has on input CoordsXY, and on output mirrored CoordsXY on game field
+     * @return
+     */
+    private CoordXY mirroredCoord(int coordX, int coordY){
         int[] mirrowList = {7, 6, 5, 4, 3, 2, 1, 0};
+        CoordXY mirrorCoord = new CoordXY();
+        mirrorCoord.setX(mirrowList[coordX]);
+        mirrorCoord.setY(mirrowList[coordY]);
+        return mirrorCoord;
 
-        int xCell = x/75;
-        int yCell = y/75;
-
-        int mirrorXCell = xCell;
-        int mirrorYCell = yCell;// is mirrored if player has white side
-
-        if(Player.side == 1){
-            mirrorXCell = mirrowList[xCell];
-            mirrorYCell = mirrowList[yCell];
-        }
-
-        if(checkers[mirrorYCell][mirrorXCell] == Player.side){
-            isClicked = true;
-
-            CoordXY coordXY = new CoordXY();
-
-            coordXY.setX(xCell);
-            coordXY.setY(yCell);
-            clickedCell.setCoord(coordXY);
-            possibleMoves(clickedCell);
-            System.out.println("Your check");
-            repaint();
-        }
-
-        System.out.println(checkers[yCell][xCell]);
-
-        System.out.println(xCell + " - x, " + yCell + " - y");
     }
 
     private void possibleMoves(ClickedCell clickedCell){
         CoordXY coord = clickedCell.getCoord();
         List<CoordXY> coords = new ArrayList<>();
 
-        if(Player.side == 2){
+        if(coord.getY() != 0){
             if(coord.getX() != 0){
-                if(coord.getY() != 0){
-                    if(coord.getX() != 7){
-                        if(checkers[coord.getY() - 1][coord.getX() - 1] == 0){
-                            coords.add(new CoordXY(coord.getX() - 1, coord.getY() - 1));
-                        }
-                        if(checkers[coord.getY() - 1][coord.getX() + 1] == 0){
-                            coords.add(new CoordXY(coord.getX() + 1, coord.getY() - 1));
-                        }
+                if(coord.getX() != 7){
+
+                    if(checkers[coord.getY() - 1][coord.getX() - 1] == 0){
+                        coords.add(new CoordXY(coord.getX() - 1, coord.getY() - 1));
+
+                    }
+                    if(checkers[coord.getY() - 1][coord.getX() + 1] == 0){
+                        coords.add(new CoordXY(coord.getX() + 1, coord.getY() - 1));
+                    }
+
+                }else{
+                    if(checkers[coord.getY() - 1][coord.getX() - 1] == 0){
+                        coords.add(new CoordXY(coord.getX() - 1, coord.getY() - 1));
+
                     }
                 }
             }
+            else{
+                if(checkers[coord.getY() - 1][coord.getX() + 1] == 0){
+                    coords.add(new CoordXY(coord.getX() + 1, coord.getY() - 1));
+                }
+            }
         }
-
         clickedCell.setPotencialPath(coords);
     }
 

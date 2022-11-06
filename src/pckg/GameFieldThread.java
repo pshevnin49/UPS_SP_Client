@@ -24,7 +24,7 @@ public class GameFieldThread extends Thread {
         JFrame frame = new JFrame();
         frame.setTitle("Checkers");
 
-        frame.setSize(615, 635);
+        frame.setSize(613, 635);
         frame.setResizable(false);
         frame.setIconImage(icon.getImage());
 
