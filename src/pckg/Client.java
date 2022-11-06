@@ -17,7 +17,7 @@ public class Client {
                              {0, 2, 0, 2, 0, 2, 0, 2},
                              {2, 0, 2, 0, 2, 0, 2, 0}};
 
-        Player.side = 1; // white (2 - black)
+        Player.side = 2; // white (2 - black)
 
         System.out.println(fieldList[0][0] + " - 0 0");
         System.out.println(fieldList[0][1] + " - 0 1");
