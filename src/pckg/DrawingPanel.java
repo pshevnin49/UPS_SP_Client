@@ -197,7 +197,7 @@ public class DrawingPanel extends JPanel {
 
         }
         else{
-            System.out.println("Not clicked ");
+
         }
 
     }
@@ -211,8 +211,8 @@ public class DrawingPanel extends JPanel {
 
     private void moveChecker(CoordXY start, CoordXY end){
 
-        System.out.println(start.getX() + " x " +  start.getY() + " y  odstranen");
-        System.out.println(end.getX() + " x " +  end.getY() + " y  pridan");
+//        System.out.println(start.getX() + " x " +  start.getY() + " y  odstranen");
+//        System.out.println(end.getX() + " x " +  end.getY() + " y  pridan");
 
         checkers[start.getY()][start.getX()] = 0;
         checkers[end.getY()][end.getX()] = Player.side;
@@ -251,22 +251,44 @@ public class DrawingPanel extends JPanel {
     private List<CoordXY> processingCell(CoordXY coordXY){ // нужно сохранить удаляемые фишки, придумать, как не создавать лишние ходы, скорее всего ерунда
         List<CoordXY> coords = new ArrayList<>(); // посмотреть гитхаб
 
+
         try {
-//            if(checkers[coordXY.getY() + 1][coordXY.getX() - 1] == 0){
-//                coords.add(new CoordXY(coordXY.getX() - 1, coordXY.getY() + 1));
-//            }
+
 //            if(checkers[coordXY.getY() + 1][coordXY.getX() - 1] != 0 && checkers[coordXY.getY() + 1][coordXY.getX() - 1] != Player.side){
-//                coords.addAll(processingCell(new CoordXY(coordXY.getX() - 2, coordXY.getY() + 2)));
+//                CoordXY newCoord = new CoordXY(coordXY.getX() - 2, coordXY.getY() + 2);
+//                CoordXY checkerCoord = new CoordXY(coordXY.getX() - 1, coordXY.getY() + 1);
+//
+//                List<CoordXY> newCoords = processingCell(newCoord);
+//                coords.addAll(newCoords);
+//
+//                newCoord.addChecker(checkerCoord);
+//                if(coordXY.getDeletedCeckers().size() > 0){
+//                    newCoord.addCheckers(coordXY.getDeletedCeckers());
+//                }
+//
+//                if(checkers[coordXY.getY() + 2][coordXY.getX() - 2] == 0 && newCoords.size() == 0){
+//                    coords.add(new CoordXY(coordXY.getX() - 2, coordXY.getY() + 2));
+//                }
 //            }
+
         }catch (Exception e){
 
         }
         try {
-//            if(checkers[coordXY.getY() + 1][coordXY.getX() + 1] == 0){
-//                coords.add(new CoordXY(coordXY.getX() + 1, coordXY.getY() + 1));
-//            }
 //            if(checkers[coordXY.getY() + 1][coordXY.getX() + 1] != 0 && checkers[coordXY.getY() + 1][coordXY.getX() + 1] != Player.side){
-//                coords.addAll(processingCell(new CoordXY(coordXY.getX() + 2, coordXY.getY() + 2)));
+//                CoordXY newCoord = new CoordXY(coordXY.getX() + 2, coordXY.getY() + 2);
+//                CoordXY checkerCoord = new CoordXY(coordXY.getX() + 1, coordXY.getY() + 1);
+//
+//                List<CoordXY> newCoords = processingCell(newCoord);
+//                coords.addAll(newCoords);
+//
+//                newCoord.addChecker(checkerCoord);
+//                if(coordXY.getDeletedCeckers().size() > 0){
+//                    newCoord.addCheckers(coordXY.getDeletedCeckers());
+//                }
+//                if(checkers[coordXY.getY() + 2][coordXY.getX() + 2] == 0 && newCoords.size() == 0){
+//                    coords.add(new CoordXY(coordXY.getX() + 2, coordXY.getY() + 2));
+//                }
 //            }
         }catch (Exception e){
 
@@ -280,6 +302,7 @@ public class DrawingPanel extends JPanel {
                 CoordXY newCoord = new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2);
                 CoordXY checkerCoord = new CoordXY(coordXY.getX() - 1, coordXY.getY() - 1);
 
+                System.out.println(newCoord.getX() + " x " + newCoord.getY() + " y spusteni processingCell");
                 List<CoordXY> newCoords = processingCell(newCoord);
                 coords.addAll(newCoords);
 
@@ -320,9 +343,16 @@ public class DrawingPanel extends JPanel {
         }catch (Exception e){
 
         }
-
         return coords;
+    }
 
+    private boolean isOnField(CoordXY coords){
+        if(coords.getX() <= 7 && coords.getX() >= 0){
+            if(coords.getY() <= 7 && coords.getY() >= 0){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
