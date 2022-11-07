@@ -11,7 +11,7 @@ public class CoordXY {
     List<CoordXY> deletedCeckers;
 
     public CoordXY(){
-
+        deletedCeckers = new ArrayList<>();
     }
 
     public CoordXY(int x, int y){

@@ -284,7 +284,11 @@ public class DrawingPanel extends JPanel {
                 coords.addAll(newCoords);
 
                 newCoord.addChecker(checkerCoord);
-                newCoord.addCheckers(coordXY.getDeletedCeckers());
+                System.out.println(coordXY.getDeletedCeckers().size() + " size");
+                if(coordXY.getDeletedCeckers().size() > 0){
+                    System.out.println(coordXY.getDeletedCeckers().size() + " size");
+                    newCoord.addCheckers(coordXY.getDeletedCeckers());
+                }
 
                 if(checkers[coordXY.getY() - 2][coordXY.getX() - 2] == 0 && newCoords.size() == 0){
                     coords.add(new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2));
@@ -292,7 +296,7 @@ public class DrawingPanel extends JPanel {
             }
 
         }catch (Exception e){
-
+            System.out.println(e.toString());
         }
         try {
             if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] == 0){
