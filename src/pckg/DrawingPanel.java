@@ -243,106 +243,129 @@ public class DrawingPanel extends JPanel {
 
     private void possibleMoves(ClickedCell clickedCell){
         CoordXY coord = clickedCell.getCoord();
-        List<CoordXY> coords = processingCell(coord);
+        List<CoordXY> coords = processingCell(coord, null);
 
         clickedCell.setPotencialPath(coords);
+
     }
 
-    private List<CoordXY> processingCell(CoordXY coordXY){ // нужно сохранить удаляемые фишки, придумать, как не создавать лишние ходы, скорее всего ерунда
-        List<CoordXY> coords = new ArrayList<>(); // посмотреть гитхаб
-
-
-        try {
-
-//            if(checkers[coordXY.getY() + 1][coordXY.getX() - 1] != 0 && checkers[coordXY.getY() + 1][coordXY.getX() - 1] != Player.side){
-//                CoordXY newCoord = new CoordXY(coordXY.getX() - 2, coordXY.getY() + 2);
-//                CoordXY checkerCoord = new CoordXY(coordXY.getX() - 1, coordXY.getY() + 1);
-//
-//                List<CoordXY> newCoords = processingCell(newCoord);
-//                coords.addAll(newCoords);
-//
-//                newCoord.addChecker(checkerCoord);
-//                if(coordXY.getDeletedCeckers().size() > 0){
-//                    newCoord.addCheckers(coordXY.getDeletedCeckers());
-//                }
-//
-//                if(checkers[coordXY.getY() + 2][coordXY.getX() - 2] == 0 && newCoords.size() == 0){
-//                    coords.add(new CoordXY(coordXY.getX() - 2, coordXY.getY() + 2));
-//                }
-//            }
-
-        }catch (Exception e){
-
+    private List<CoordXY> processingCell(CoordXY coordXY, CoordXY prevCoord){
+        List<CoordXY> coords = new ArrayList<>();
+        System.out.println(coordXY.getX() + " x " + coordXY.getY() + " y spusteni processingCell coords");
+        if(prevCoord != null){
+            System.out.println(prevCoord.getX() + " x " + prevCoord.getY() + " y previous coords");
         }
-        try {
-//            if(checkers[coordXY.getY() + 1][coordXY.getX() + 1] != 0 && checkers[coordXY.getY() + 1][coordXY.getX() + 1] != Player.side){
-//                CoordXY newCoord = new CoordXY(coordXY.getX() + 2, coordXY.getY() + 2);
-//                CoordXY checkerCoord = new CoordXY(coordXY.getX() + 1, coordXY.getY() + 1);
-//
-//                List<CoordXY> newCoords = processingCell(newCoord);
-//                coords.addAll(newCoords);
-//
-//                newCoord.addChecker(checkerCoord);
-//                if(coordXY.getDeletedCeckers().size() > 0){
-//                    newCoord.addCheckers(coordXY.getDeletedCeckers());
-//                }
-//                if(checkers[coordXY.getY() + 2][coordXY.getX() + 2] == 0 && newCoords.size() == 0){
-//                    coords.add(new CoordXY(coordXY.getX() + 2, coordXY.getY() + 2));
-//                }
-//            }
-        }catch (Exception e){
 
-        }
-        try {
-            if(checkers[coordXY.getY() - 1][coordXY.getX() - 1] == 0){
-                coords.add(new CoordXY(coordXY.getX() - 1, coordXY.getY() - 1));
-            }
 
-            if(checkers[coordXY.getY() - 1][coordXY.getX() - 1] != 0 && checkers[coordXY.getY() - 1][coordXY.getX() - 1] != Player.side){// добавить лист и проверять длину, если ноль, то рисовать клетку
-                CoordXY newCoord = new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2);
-                CoordXY checkerCoord = new CoordXY(coordXY.getX() - 1, coordXY.getY() - 1);
+        if(isOnField(coordXY)){
+            try {
 
-                System.out.println(newCoord.getX() + " x " + newCoord.getY() + " y spusteni processingCell");
-                List<CoordXY> newCoords = processingCell(newCoord);
-                coords.addAll(newCoords);
+            if(checkers[coordXY.getY() + 1][coordXY.getX() - 1] != 0 && checkers[coordXY.getY() + 1][coordXY.getX() - 1] != Player.side){
+
+                CoordXY newCoord = new CoordXY(coordXY.getX() - 2, coordXY.getY() + 2);
+                CoordXY checkerCoord = new CoordXY(coordXY.getX() - 1, coordXY.getY() + 1);
+
+                List<CoordXY> newCoords = new ArrayList<>();
+
+                if(prevCoord == null || !checkerCoord.equals(newCoord)){
+                    newCoords = processingCell(newCoord, coordXY);
+                    coords.addAll(newCoords);
+                }
 
                 newCoord.addChecker(checkerCoord);
                 if(coordXY.getDeletedCeckers().size() > 0){
                     newCoord.addCheckers(coordXY.getDeletedCeckers());
                 }
-                if(checkers[coordXY.getY() - 2][coordXY.getX() - 2] == 0 && newCoords.size() == 0){
-                    coords.add(new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2));
+
+                if(checkers[coordXY.getY() + 2][coordXY.getX() - 2] == 0 && newCoords.size() == 0){
+                    coords.add(new CoordXY(coordXY.getX() - 2, coordXY.getY() + 2));
                 }
             }
 
-        }catch (Exception e){
+            }catch (Exception e){
 
+            }
+            try {
+
+                if(checkers[coordXY.getY() + 1][coordXY.getX() + 1] != 0 && checkers[coordXY.getY() + 1][coordXY.getX() + 1] != Player.side){
+                    CoordXY newCoord = new CoordXY(coordXY.getX() + 2, coordXY.getY() + 2);
+                    CoordXY checkerCoord = new CoordXY(coordXY.getX() + 1, coordXY.getY() + 1);
+                    List<CoordXY> newCoords = new ArrayList<>();
+
+                    if(prevCoord == null || !checkerCoord.equals(newCoord)){
+                        newCoords = processingCell(newCoord, coordXY);
+                        coords.addAll(newCoords);
+                    }
+
+                    newCoord.addChecker(checkerCoord);
+                    if(coordXY.getDeletedCeckers().size() > 0){
+                        newCoord.addCheckers(coordXY.getDeletedCeckers());
+                    }
+                    if(checkers[coordXY.getY() + 2][coordXY.getX() + 2] == 0 && newCoords.size() == 0){
+                        coords.add(new CoordXY(coordXY.getX() + 2, coordXY.getY() + 2));
+                    }
+                }
+            }catch (Exception e){
+
+            }
+            try {
+                if(checkers[coordXY.getY() - 1][coordXY.getX() - 1] == 0){
+                    coords.add(new CoordXY(coordXY.getX() - 1, coordXY.getY() - 1));
+                }
+
+                if(checkers[coordXY.getY() - 1][coordXY.getX() - 1] != 0 && checkers[coordXY.getY() - 1][coordXY.getX() - 1] != Player.side){// добавить лист и проверять длину, если ноль, то рисовать клетку
+                    CoordXY newCoord = new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2);
+                    CoordXY checkerCoord = new CoordXY(coordXY.getX() - 1, coordXY.getY() - 1);
+
+                    List<CoordXY> newCoords = new ArrayList<>();
+
+                    if(prevCoord == null || !checkerCoord.equals(newCoord)){
+                        newCoords = processingCell(newCoord, coordXY);
+                        coords.addAll(newCoords);
+                    }
+
+                    newCoord.addChecker(checkerCoord);
+                    if(coordXY.getDeletedCeckers().size() > 0){
+                        newCoord.addCheckers(coordXY.getDeletedCeckers());
+                    }
+                    if(checkers[coordXY.getY() - 2][coordXY.getX() - 2] == 0 && newCoords.size() == 0){
+                        coords.add(new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2));
+                    }
+                }
+
+            }catch (Exception e){
+
+            }
+            try {
+                if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] == 0){
+                    coords.add(new CoordXY(coordXY.getX() + 1, coordXY.getY() - 1));
+                }
+
+                if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] != 0 && checkers[coordXY.getY() - 1][coordXY.getX() + 1] != Player.side){
+
+                    CoordXY newCoord = new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2);
+                    CoordXY checkerCoord = new CoordXY(coordXY.getX() + 1, coordXY.getY() - 1);
+                    List<CoordXY> newCoords = new ArrayList<>();
+
+                    if(prevCoord == null || !checkerCoord.equals(newCoord)){
+                        newCoords = processingCell(newCoord, coordXY);
+                        coords.addAll(newCoords);
+                    }
+
+                    newCoord.addChecker(checkerCoord);
+                    if(coordXY.getDeletedCeckers().size() > 0){
+                        newCoord.addCheckers(coordXY.getDeletedCeckers());
+                    }
+                    if(checkers[coordXY.getY() - 2][coordXY.getX() + 2] == 0 && newCoords.size() == 0){
+                        coords.add(new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2));
+                    }
+                }
+
+            }catch (Exception e){
+
+            }
         }
-        try {
-            if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] == 0){
-                coords.add(new CoordXY(coordXY.getX() + 1, coordXY.getY() - 1));
-            }
 
-            if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] != 0 && checkers[coordXY.getY() - 1][coordXY.getX() + 1] != Player.side){
-
-                CoordXY newCoord = new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2);
-                CoordXY checkerCoord = new CoordXY(coordXY.getX() + 1, coordXY.getY() - 1);
-
-                List<CoordXY> newCoords = processingCell(newCoord);
-                coords.addAll(newCoords);
-
-                newCoord.addChecker(checkerCoord);
-                if(coordXY.getDeletedCeckers().size() > 0){
-                    newCoord.addCheckers(coordXY.getDeletedCeckers());
-                }
-                if(checkers[coordXY.getY() - 2][coordXY.getX() + 2] == 0 && newCoords.size() == 0){
-                    coords.add(new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2));
-                }
-            }
-
-        }catch (Exception e){
-
-        }
         return coords;
     }
 
