@@ -284,19 +284,16 @@ public class DrawingPanel extends JPanel {
                 coords.addAll(newCoords);
 
                 newCoord.addChecker(checkerCoord);
-                System.out.println(coordXY.getDeletedCeckers().size() + " size");
                 if(coordXY.getDeletedCeckers().size() > 0){
-                    System.out.println(coordXY.getDeletedCeckers().size() + " size");
                     newCoord.addCheckers(coordXY.getDeletedCeckers());
                 }
-
                 if(checkers[coordXY.getY() - 2][coordXY.getX() - 2] == 0 && newCoords.size() == 0){
                     coords.add(new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2));
                 }
             }
 
         }catch (Exception e){
-            System.out.println(e.toString());
+
         }
         try {
             if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] == 0){
@@ -305,10 +302,16 @@ public class DrawingPanel extends JPanel {
 
             if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] != 0 && checkers[coordXY.getY() - 1][coordXY.getX() + 1] != Player.side){
 
+                CoordXY newCoord = new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2);
+                CoordXY checkerCoord = new CoordXY(coordXY.getX() + 1, coordXY.getY() - 1);
 
-                List<CoordXY> newCoords = processingCell(new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2));
+                List<CoordXY> newCoords = processingCell(newCoord);
                 coords.addAll(newCoords);
 
+                newCoord.addChecker(checkerCoord);
+                if(coordXY.getDeletedCeckers().size() > 0){
+                    newCoord.addCheckers(coordXY.getDeletedCeckers());
+                }
                 if(checkers[coordXY.getY() - 2][coordXY.getX() + 2] == 0 && newCoords.size() == 0){
                     coords.add(new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2));
                 }
