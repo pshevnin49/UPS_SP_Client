@@ -209,8 +209,6 @@ public class DrawingPanel extends JPanel {
 
     }
 
-
-
     private void moveChecker(CoordXY start, CoordXY end){
 
         System.out.println(start.getX() + " x " +  start.getY() + " y  odstranen");
@@ -222,7 +220,7 @@ public class DrawingPanel extends JPanel {
     }
 
     /**
-     * On server coords ar stored in matrix. This matrix is one for both sides
+     * On server coords are stored in matrix. This matrix is one for both sides
      * thats why if player is on white side, whe need to send on server mirrored coords
      * this method has on input CoordsXY, and on output mirrored CoordsXY on game field
      * @return
@@ -245,59 +243,79 @@ public class DrawingPanel extends JPanel {
 
     private void possibleMoves(ClickedCell clickedCell){
         CoordXY coord = clickedCell.getCoord();
-        List<CoordXY> coords = new ArrayList<>();
-
-        if(Player.side == 2){
-            if(coord.getY() != 0){
-                if(coord.getX() != 0){
-                    if(coord.getX() != 7){
-                        if(checkers[coord.getY() - 1][coord.getX() - 1] == 0){
-                            coords.add(new CoordXY(coord.getX() - 1, coord.getY() - 1));
-                        }
-                        if(checkers[coord.getY() - 1][coord.getX() + 1] == 0){
-                            coords.add(new CoordXY(coord.getX() + 1, coord.getY() - 1));
-                        }
-
-                    }else{
-                        if(checkers[coord.getY() - 1][coord.getX() - 1] == 0){
-                            coords.add(new CoordXY(coord.getX() - 1, coord.getY() - 1));
-
-                        }
-                    }
-                }
-                else{
-                    if(checkers[coord.getY() - 1][coord.getX() + 1] == 0){
-                        coords.add(new CoordXY(coord.getX() + 1, coord.getY() - 1));
-                    }
-                }
-            }
-        }else{
-            if(coord.getY() != 7){
-                if(coord.getX() != 7){
-                    if(coord.getX() != 0){
-
-                        if(checkers[coord.getY() + 1][coord.getX() + 1] == 0){
-                            coords.add(new CoordXY(coord.getX() + 1, coord.getY() + 1));
-                        }
-                        if(checkers[coord.getY() + 1][coord.getX() - 1] == 0){
-                            coords.add(new CoordXY(coord.getX() - 1, coord.getY() + 1));
-                        }
-
-                    }else{
-                        if(checkers[coord.getY() + 1][coord.getX() + 1] == 0){
-                            coords.add(new CoordXY(coord.getX() + 1, coord.getY() + 1));
-                        }
-                    }
-                }
-                else{
-                    if(checkers[coord.getY() + 1][coord.getX() - 1] == 0){
-                        coords.add(new CoordXY(coord.getX() - 1, coord.getY() + 1));
-                    }
-                }
-            }
-        }
+        List<CoordXY> coords = processingCell(coord);
 
         clickedCell.setPotencialPath(coords);
+    }
+
+    private List<CoordXY> processingCell(CoordXY coordXY){ // нужно сохранить удаляемые фишки, придумать, как не создавать лишние ходы, скорее всего ерунда
+        List<CoordXY> coords = new ArrayList<>(); // посмотреть гитхаб
+
+        try {
+//            if(checkers[coordXY.getY() + 1][coordXY.getX() - 1] == 0){
+//                coords.add(new CoordXY(coordXY.getX() - 1, coordXY.getY() + 1));
+//            }
+//            if(checkers[coordXY.getY() + 1][coordXY.getX() - 1] != 0 && checkers[coordXY.getY() + 1][coordXY.getX() - 1] != Player.side){
+//                coords.addAll(processingCell(new CoordXY(coordXY.getX() - 2, coordXY.getY() + 2)));
+//            }
+        }catch (Exception e){
+
+        }
+        try {
+//            if(checkers[coordXY.getY() + 1][coordXY.getX() + 1] == 0){
+//                coords.add(new CoordXY(coordXY.getX() + 1, coordXY.getY() + 1));
+//            }
+//            if(checkers[coordXY.getY() + 1][coordXY.getX() + 1] != 0 && checkers[coordXY.getY() + 1][coordXY.getX() + 1] != Player.side){
+//                coords.addAll(processingCell(new CoordXY(coordXY.getX() + 2, coordXY.getY() + 2)));
+//            }
+        }catch (Exception e){
+
+        }
+        try {
+            if(checkers[coordXY.getY() - 1][coordXY.getX() - 1] == 0){
+                coords.add(new CoordXY(coordXY.getX() - 1, coordXY.getY() - 1));
+            }
+
+            if(checkers[coordXY.getY() - 1][coordXY.getX() - 1] != 0 && checkers[coordXY.getY() - 1][coordXY.getX() - 1] != Player.side){// добавить лист и проверять длину, если ноль, то рисовать клетку
+                CoordXY newCoord = new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2);
+                CoordXY checkerCoord = new CoordXY(coordXY.getX() - 1, coordXY.getY() - 1);
+
+                List<CoordXY> newCoords = processingCell(newCoord);
+                coords.addAll(newCoords);
+
+                newCoord.addChecker(checkerCoord);
+                newCoord.addCheckers(coordXY.getDeletedCeckers());
+
+                if(checkers[coordXY.getY() - 2][coordXY.getX() - 2] == 0 && newCoords.size() == 0){
+                    coords.add(new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2));
+                }
+            }
+
+        }catch (Exception e){
+
+        }
+        try {
+            if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] == 0){
+                coords.add(new CoordXY(coordXY.getX() + 1, coordXY.getY() - 1));
+            }
+
+            if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] != 0 && checkers[coordXY.getY() - 1][coordXY.getX() + 1] != Player.side){
+
+
+                List<CoordXY> newCoords = processingCell(new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2));
+                coords.addAll(newCoords);
+
+                if(checkers[coordXY.getY() - 2][coordXY.getX() + 2] == 0 && newCoords.size() == 0){
+                    coords.add(new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2));
+                }
+            }
+
+        }catch (Exception e){
+
+        }
+
+        return coords;
+
     }
 
 }
