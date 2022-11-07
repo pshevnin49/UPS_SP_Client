@@ -5,10 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,13 +13,13 @@ import java.util.List;
 
 public class DrawingPanel extends JPanel {
 
-    int cellSize = 600/8;
+    int cellSize = 600 / 8;
     int[][] checkers;
     boolean isClicked = false;
     ClickedCell clickedCell = new ClickedCell();
 
 
-    public DrawingPanel(int[][] checkers){
+    public DrawingPanel(int[][] checkers) {
         this.checkers = checkers;
 
 
@@ -58,18 +55,18 @@ public class DrawingPanel extends JPanel {
         this.setFocusable(true);
     }
 
-    public void mouseClick(int x, int y){
+    public void mouseClick(int x, int y) {
 
-        int xCell = x/75;
-        int yCell = y/75;
+        int xCell = x / 75;
+        int yCell = y / 75;
 
         CoordXY mirrorCoord = mirroredCoord(xCell, yCell);
 
-        if(isClicked){
+        if (isClicked) {
             List<CoordXY> path = clickedCell.getPotencialPath();
 
-            for(int i = 0; i < path.size(); i++){
-                if(path.get(i).getX() == mirrorCoord.getX() && path.get(i).getY() == mirrorCoord.getY()){
+            for (int i = 0; i < path.size(); i++) {
+                if (path.get(i).getX() == mirrorCoord.getX() && path.get(i).getY() == mirrorCoord.getY()) {
 
                     System.out.println("Pokus chodit ");
                     // mirroring of 'end' because here we working with matrix on "server"
@@ -85,7 +82,7 @@ public class DrawingPanel extends JPanel {
             }
         }
 
-        if(checkers[mirrorCoord.getY()][mirrorCoord.getX()] == Player.side){
+        if (checkers[mirrorCoord.getY()][mirrorCoord.getX()] == Player.side) {
 
             isClicked = true;
             CoordXY coordXY = new CoordXY();
@@ -100,10 +97,10 @@ public class DrawingPanel extends JPanel {
         System.out.println(mirrorCoord.getX() + " - x, " + mirrorCoord.getY() + " - y");
     }
 
-    public void paint (Graphics g) {
+    public void paint(Graphics g) {
         super.paint(g);
 
-        Graphics2D g2 = (Graphics2D)g;
+        Graphics2D g2 = (Graphics2D) g;
         drawField(g2);
 
         drawClicked(g2);
@@ -117,14 +114,14 @@ public class DrawingPanel extends JPanel {
 
     }
 
-    private void drawField(Graphics2D g){
+    private void drawField(Graphics2D g) {
         //int cellSize = 600/8; // 800 will be changed on real window size
-        for(int y = 0; y < 8; y++){
-            for(int x = 0; x < 8; x++){
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
 
-                if(x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1){
+                if (x % 2 == 0 && y % 2 == 0 || x % 2 == 1 && y % 2 == 1) {
                     g.setColor(new Color(183, 165, 153));
-                }else{
+                } else {
                     g.setColor(new Color(111, 92, 78));
                 }
 
@@ -142,20 +139,20 @@ public class DrawingPanel extends JPanel {
 
         int[][] newCheckers = checkers;
 
-        if(Player.side == 1){
+        if (Player.side == 1) {
             newCheckers = invCheckers(checkers);
         }
 
-        for(int x = 0; x < newCheckers.length; x++){
-            for(int y = 0; y < newCheckers[x].length; y++){
+        for (int x = 0; x < newCheckers.length; x++) {
+            for (int y = 0; y < newCheckers[x].length; y++) {
 
-                if(newCheckers[y][x] == 1){
+                if (newCheckers[y][x] == 1) {
                     coordX = nullX + x * cellSize;
                     coordY = nullY + y * cellSize;
                     drawChecker(g2, coordX, coordY, "white_checker.png");
                 }
 
-                if(newCheckers[y][x] == 2){
+                if (newCheckers[y][x] == 2) {
                     coordX = nullX + x * cellSize;
                     coordY = nullY + y * cellSize;
                     drawChecker(g2, coordX, coordY, "black_checker.png");
@@ -165,11 +162,11 @@ public class DrawingPanel extends JPanel {
         }
     }
 
-    private int[][] invCheckers(int[][] checkers){ // invert checkers field in y coords
+    private int[][] invCheckers(int[][] checkers) { // invert checkers field in y coords
         int[][] newCheckers = new int[8][8];
 
         int newX = 7;
-        for(int x = 0; x < checkers.length; x++) {
+        for (int x = 0; x < checkers.length; x++) {
             int newY = 7;
             for (int y = 0; y < checkers[0].length; y++) {
                 newCheckers[newY][newX] = checkers[y][x];
@@ -182,21 +179,20 @@ public class DrawingPanel extends JPanel {
         return newCheckers;
     }
 
-    private void drawClicked(Graphics2D g2){
+    private void drawClicked(Graphics2D g2) {
 
-        if(isClicked){
+        if (isClicked) {
             g2.setColor(new Color(79, 177, 105));
             System.out.println("Print clicked ");
             CoordXY mirrorRect = mirroredCoord(clickedCell.getCoord().getX(), clickedCell.getCoord().getY());
             g2.fillRect(cellSize * mirrorRect.getX(), cellSize * mirrorRect.getY(), cellSize, cellSize);
 
-            for(int i = 0; i < clickedCell.getPotencialPath().size(); i++){
+            for (int i = 0; i < clickedCell.getPotencialPath().size(); i++) {
                 CoordXY coord = mirroredCoord(clickedCell.getPotencialPath().get(i).getX(), clickedCell.getPotencialPath().get(i).getY());
                 g2.fillRect(cellSize * coord.getX(), cellSize * coord.getY(), cellSize, cellSize);
             }
 
-        }
-        else{
+        } else {
 
         }
 
@@ -209,7 +205,7 @@ public class DrawingPanel extends JPanel {
 
     }
 
-    private void moveChecker(CoordXY start, CoordXY end){
+    private void moveChecker(CoordXY start, CoordXY end) {
 
 //        System.out.println(start.getX() + " x " +  start.getY() + " y  odstranen");
 //        System.out.println(end.getX() + " x " +  end.getY() + " y  pridan");
@@ -223,16 +219,17 @@ public class DrawingPanel extends JPanel {
      * On server coords are stored in matrix. This matrix is one for both sides
      * thats why if player is on white side, whe need to send on server mirrored coords
      * this method has on input CoordsXY, and on output mirrored CoordsXY on game field
+     *
      * @return
      */
-    private CoordXY mirroredCoord(int coordX, int coordY){
+    private CoordXY mirroredCoord(int coordX, int coordY) {
 
         int[] mirrowList = {7, 6, 5, 4, 3, 2, 1, 0};
         CoordXY mirrorCoord = new CoordXY();
-        if(Player.side == 1){
+        if (Player.side == 1) {
             mirrorCoord.setX(mirrowList[coordX]);
             mirrorCoord.setY(mirrowList[coordY]);
-        }else{
+        } else {
             mirrorCoord.setX(coordX);
             mirrorCoord.setY(coordY);
         }
@@ -241,7 +238,7 @@ public class DrawingPanel extends JPanel {
 
     }
 
-    private void possibleMoves(ClickedCell clickedCell){
+    private void possibleMoves(ClickedCell clickedCell) {
         CoordXY coord = clickedCell.getCoord();
         List<CoordXY> coords = processingCell(coord, null);
 
@@ -249,129 +246,50 @@ public class DrawingPanel extends JPanel {
 
     }
 
-    private List<CoordXY> processingCell(CoordXY coordXY, CoordXY prevCoord){
+    private List<CoordXY> processingCell(CoordXY coordXY, CoordXY prevCoords) {
+        int[][] nbsCoords = {{1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
+
+        System.out.println(coordXY.getX() + " x, " + coordXY.getY() + " y - processingCell");
+
         List<CoordXY> coords = new ArrayList<>();
-        System.out.println(coordXY.getX() + " x " + coordXY.getY() + " y spusteni processingCell coords");
-        if(prevCoord != null){
-            System.out.println(prevCoord.getX() + " x " + prevCoord.getY() + " y previous coords");
-        }
+        for (int i = 0; i < nbsCoords.length; i++) {
+            CoordXY neighborXY = new CoordXY(coordXY.getX() + nbsCoords[i][0], coordXY.getY() + nbsCoords[i][1]);
+            int nbChecker;
 
-
-        if(isOnField(coordXY)){
             try {
-
-            if(checkers[coordXY.getY() + 1][coordXY.getX() - 1] != 0 && checkers[coordXY.getY() + 1][coordXY.getX() - 1] != Player.side){
-
-                CoordXY newCoord = new CoordXY(coordXY.getX() - 2, coordXY.getY() + 2);
-                CoordXY checkerCoord = new CoordXY(coordXY.getX() - 1, coordXY.getY() + 1);
-
-                List<CoordXY> newCoords = new ArrayList<>();
-
-                if(prevCoord == null || !checkerCoord.equals(newCoord)){
-                    newCoords = processingCell(newCoord, coordXY);
-                    coords.addAll(newCoords);
-                }
-
-                newCoord.addChecker(checkerCoord);
-                if(coordXY.getDeletedCeckers().size() > 0){
-                    newCoord.addCheckers(coordXY.getDeletedCeckers());
-                }
-
-                if(checkers[coordXY.getY() + 2][coordXY.getX() - 2] == 0 && newCoords.size() == 0){
-                    coords.add(new CoordXY(coordXY.getX() - 2, coordXY.getY() + 2));
-                }
+                nbChecker = checkers[neighborXY.getY()][neighborXY.getX()];
+            } catch (Exception e) {
+                System.out.println("Exception ");
+                continue;
             }
 
-            }catch (Exception e){
+            if (nbChecker == 0) {
+                coords.add(neighborXY);
+            } else if (nbChecker != Player.side) { // if on cell is an enemy
+
+                if (prevCoords != null) {
+                    if (prevCoords.equals(neighborXY)) { // if we have check the way we came
+                        continue;
+                    }
+                }
+
+                CoordXY movingCellXY = new CoordXY(neighborXY.getX() + nbsCoords[i][0], neighborXY.getY() + nbsCoords[i][1]);
+                if (isOnField(movingCellXY) && !movingCellXY.equals(clickedCell)) {
+                    if (checkers[movingCellXY.getY()][movingCellXY.getX()] == 0) {
+                        coords.addAll(processingCell(movingCellXY, neighborXY));
+                    }
+                }
 
             }
-            try {
 
-                if(checkers[coordXY.getY() + 1][coordXY.getX() + 1] != 0 && checkers[coordXY.getY() + 1][coordXY.getX() + 1] != Player.side){
-                    CoordXY newCoord = new CoordXY(coordXY.getX() + 2, coordXY.getY() + 2);
-                    CoordXY checkerCoord = new CoordXY(coordXY.getX() + 1, coordXY.getY() + 1);
-                    List<CoordXY> newCoords = new ArrayList<>();
-
-                    if(prevCoord == null || !checkerCoord.equals(newCoord)){
-                        newCoords = processingCell(newCoord, coordXY);
-                        coords.addAll(newCoords);
-                    }
-
-                    newCoord.addChecker(checkerCoord);
-                    if(coordXY.getDeletedCeckers().size() > 0){
-                        newCoord.addCheckers(coordXY.getDeletedCeckers());
-                    }
-                    if(checkers[coordXY.getY() + 2][coordXY.getX() + 2] == 0 && newCoords.size() == 0){
-                        coords.add(new CoordXY(coordXY.getX() + 2, coordXY.getY() + 2));
-                    }
-                }
-            }catch (Exception e){
-
-            }
-            try {
-                if(checkers[coordXY.getY() - 1][coordXY.getX() - 1] == 0){
-                    coords.add(new CoordXY(coordXY.getX() - 1, coordXY.getY() - 1));
-                }
-
-                if(checkers[coordXY.getY() - 1][coordXY.getX() - 1] != 0 && checkers[coordXY.getY() - 1][coordXY.getX() - 1] != Player.side){// добавить лист и проверять длину, если ноль, то рисовать клетку
-                    CoordXY newCoord = new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2);
-                    CoordXY checkerCoord = new CoordXY(coordXY.getX() - 1, coordXY.getY() - 1);
-
-                    List<CoordXY> newCoords = new ArrayList<>();
-
-                    if(prevCoord == null || !checkerCoord.equals(newCoord)){
-                        newCoords = processingCell(newCoord, coordXY);
-                        coords.addAll(newCoords);
-                    }
-
-                    newCoord.addChecker(checkerCoord);
-                    if(coordXY.getDeletedCeckers().size() > 0){
-                        newCoord.addCheckers(coordXY.getDeletedCeckers());
-                    }
-                    if(checkers[coordXY.getY() - 2][coordXY.getX() - 2] == 0 && newCoords.size() == 0){
-                        coords.add(new CoordXY(coordXY.getX() - 2, coordXY.getY() - 2));
-                    }
-                }
-
-            }catch (Exception e){
-
-            }
-            try {
-                if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] == 0){
-                    coords.add(new CoordXY(coordXY.getX() + 1, coordXY.getY() - 1));
-                }
-
-                if(checkers[coordXY.getY() - 1][coordXY.getX() + 1] != 0 && checkers[coordXY.getY() - 1][coordXY.getX() + 1] != Player.side){
-
-                    CoordXY newCoord = new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2);
-                    CoordXY checkerCoord = new CoordXY(coordXY.getX() + 1, coordXY.getY() - 1);
-                    List<CoordXY> newCoords = new ArrayList<>();
-
-                    if(prevCoord == null || !checkerCoord.equals(newCoord)){
-                        newCoords = processingCell(newCoord, coordXY);
-                        coords.addAll(newCoords);
-                    }
-
-                    newCoord.addChecker(checkerCoord);
-                    if(coordXY.getDeletedCeckers().size() > 0){
-                        newCoord.addCheckers(coordXY.getDeletedCeckers());
-                    }
-                    if(checkers[coordXY.getY() - 2][coordXY.getX() + 2] == 0 && newCoords.size() == 0){
-                        coords.add(new CoordXY(coordXY.getX() + 2, coordXY.getY() - 2));
-                    }
-                }
-
-            }catch (Exception e){
-
-            }
         }
 
         return coords;
     }
 
-    private boolean isOnField(CoordXY coords){
-        if(coords.getX() <= 7 && coords.getX() >= 0){
-            if(coords.getY() <= 7 && coords.getY() >= 0){
+    private boolean isOnField(CoordXY coords) {
+        if (coords.getX() <= 7 && coords.getX() >= 0) {
+            if (coords.getY() <= 7 && coords.getY() >= 0) {
                 return true;
             }
         }
