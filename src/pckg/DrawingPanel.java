@@ -263,25 +263,31 @@ public class DrawingPanel extends JPanel {
                 continue;
             }
 
-            if (nbChecker == 0) {
+            if (nbChecker == 0 && prevCoords == null) {
                 coords.add(neighborXY);
             } else if (nbChecker != Player.side) { // if on cell is an enemy
 
                 if (prevCoords != null) {
-                    if (prevCoords.equals(neighborXY)) { // if we have check the way we came
+                    if (prevCoords.getX() == neighborXY.getX() && prevCoords.getY() == neighborXY.getY()) { // if we have check the way we came
                         continue;
                     }
+
                 }
 
                 CoordXY movingCellXY = new CoordXY(neighborXY.getX() + nbsCoords[i][0], neighborXY.getY() + nbsCoords[i][1]);
-                if (isOnField(movingCellXY) && !movingCellXY.equals(clickedCell)) {
+
+                if (isOnField(movingCellXY) && !movingCellXY.equals(clickedCell.getCoord())) {
                     if (checkers[movingCellXY.getY()][movingCellXY.getX()] == 0) {
-                        coords.addAll(processingCell(movingCellXY, neighborXY));
+
+                        List<CoordXY> newCoords = processingCell(movingCellXY, neighborXY);
+
+                            coords.add(movingCellXY);
+                            coords.addAll(newCoords);
+
                     }
                 }
 
             }
-
         }
 
         return coords;
