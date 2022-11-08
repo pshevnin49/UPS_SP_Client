@@ -8,20 +8,20 @@ public class CoordXY {
     int x;
     int y;
 
-    List<CoordXY> deletedCeckers;
+    CoordXY deletedChecker = null;
 
     public CoordXY(){
-        deletedCeckers = new ArrayList<>();
+
     }
 
     public CoordXY(int x, int y){
         this.x = x;
         this.y = y;
-        deletedCeckers = new ArrayList<>();
+
     }
 
-    public List<CoordXY> getDeletedCeckers(){
-        return deletedCeckers;
+    public CoordXY getDeletedCecker(){
+        return deletedChecker;
     }
 
     public int getX() {
@@ -32,12 +32,8 @@ public class CoordXY {
         return y;
     }
 
-    public void addChecker(CoordXY checker){
-        deletedCeckers.add(checker);
-    }
-
-    public void addCheckers(List<CoordXY> checkers){
-        deletedCeckers.addAll(checkers);
+    public void setDelChecker(CoordXY checker){
+        deletedChecker = checker;
     }
 
     public void setX(int x) {

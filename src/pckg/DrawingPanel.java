@@ -66,13 +66,16 @@ public class DrawingPanel extends JPanel {
             List<CoordXY> path = clickedCell.getPotencialPath();
 
             for (int i = 0; i < path.size(); i++) {
+
                 if (path.get(i).getX() == mirrorCoord.getX() && path.get(i).getY() == mirrorCoord.getY()) {
 
-                    System.out.println("Pokus chodit ");
                     // mirroring of 'end' because here we working with matrix on "server"
                     CoordXY endXY = new CoordXY(path.get(i).getX(), path.get(i).getY());
                     CoordXY startXY = new CoordXY(clickedCell.getCoord().getX(), clickedCell.getCoord().getY());
 
+                    if(path.get(i).getDeletedCecker() != null){
+                       deleteChecker(path.get(i).getDeletedCecker());
+                    }
                     moveChecker(startXY, endXY);
                     clickedCell = new ClickedCell();
                     isClicked = false;
@@ -205,10 +208,13 @@ public class DrawingPanel extends JPanel {
 
     }
 
-    private void moveChecker(CoordXY start, CoordXY end) {
+    private void deleteChecker(CoordXY checkerXY){
 
-//        System.out.println(start.getX() + " x " +  start.getY() + " y  odstranen");
-//        System.out.println(end.getX() + " x " +  end.getY() + " y  pridan");
+        checkers[checkerXY.getY()][checkerXY.getX()] = 0;
+
+    }
+
+    private void moveChecker(CoordXY start, CoordXY end) {
 
         checkers[start.getY()][start.getX()] = 0;
         checkers[end.getY()][end.getX()] = Player.side;
@@ -240,20 +246,23 @@ public class DrawingPanel extends JPanel {
 
     private void possibleMoves(ClickedCell clickedCell) {
         CoordXY coord = clickedCell.getCoord();
-        List<CoordXY> coords = processingCell(coord, null);
+        List<CoordXY> coords = processingCell(coord);
 
         clickedCell.setPotencialPath(coords);
 
     }
 
-    private List<CoordXY> processingCell(CoordXY coordXY, CoordXY prevCoords) {
+    private List<CoordXY> processingCell(CoordXY coordXY) {
         int[][] nbsCoords = {{1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
 
         System.out.println(coordXY.getX() + " x, " + coordXY.getY() + " y - processingCell");
 
         List<CoordXY> coords = new ArrayList<>();
         for (int i = 0; i < nbsCoords.length; i++) {
+
             CoordXY neighborXY = new CoordXY(coordXY.getX() + nbsCoords[i][0], coordXY.getY() + nbsCoords[i][1]);
+            //neighborXY = mirroredCoord(coordXY.getX() + nbsCoords[i][0], coordXY.getY() + nbsCoords[i][1]);
+
             int nbChecker;
 
             try {
@@ -263,25 +272,14 @@ public class DrawingPanel extends JPanel {
                 continue;
             }
 
-            if (nbChecker == 0 && prevCoords == null) {
+            if (nbChecker == 0) {
                 coords.add(neighborXY);
             } else if (nbChecker != Player.side) { // if on cell is an enemy
 
-                if (prevCoords != null) {
-                    if (prevCoords.getX() == neighborXY.getX() && prevCoords.getY() == neighborXY.getY()) { // if we have check the way we came
-                        continue;
-                    }
-
-                }
-
                 CoordXY movingCellXY = new CoordXY(neighborXY.getX() + nbsCoords[i][0], neighborXY.getY() + nbsCoords[i][1]);
-
-                if (isOnField(movingCellXY) && !movingCellXY.equals(clickedCell.getCoord())) {
-                    if (checkers[movingCellXY.getY()][movingCellXY.getX()] == 0) {
-                        List<CoordXY> newCoords = processingCell(movingCellXY, neighborXY);
-                        coords.add(movingCellXY);
-                        coords.addAll(newCoords);
-                    }
+                if (isOnField(movingCellXY) && checkers[movingCellXY.getY()][movingCellXY.getX()] == 0) {
+                    movingCellXY.setDelChecker(neighborXY);
+                    coords.add(movingCellXY);
                 }
 
             }
