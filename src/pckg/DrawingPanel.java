@@ -261,8 +261,6 @@ public class DrawingPanel extends JPanel {
         for (int i = 0; i < nbsCoords.length; i++) {
 
             CoordXY neighborXY = new CoordXY(coordXY.getX() + nbsCoords[i][0], coordXY.getY() + nbsCoords[i][1]);
-            //neighborXY = mirroredCoord(coordXY.getX() + nbsCoords[i][0], coordXY.getY() + nbsCoords[i][1]);
-
             int nbChecker;
 
             try {
@@ -272,6 +270,7 @@ public class DrawingPanel extends JPanel {
                 continue;
             }
 
+            System.out.println(nbChecker + " checker");
             if (nbChecker == 0) {
                 coords.add(neighborXY);
             } else if (nbChecker != Player.side) { // if on cell is an enemy
