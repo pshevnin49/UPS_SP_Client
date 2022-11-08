@@ -8,14 +8,14 @@ import java.net.URL;
 public class GameFieldThread extends Thread {
 
     int[][] fieldList; // all figures on the field
-    int side; // side of playng white or black (white is 1, black is 2)
+
 
 
     ImageIcon icon = new ImageIcon("icon.png");
 
-    public GameFieldThread(int[][] fieldList, int side){
-        this.fieldList = fieldList;
-        this.side = side;
+    public GameFieldThread(ServerCommunication server){
+        this.fieldList = server.getField();
+
     }
 
 

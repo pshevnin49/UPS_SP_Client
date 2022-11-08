@@ -8,13 +8,12 @@ import java.awt.event.ActionListener;
 public class StartForm {
 
     JFrame frame;
-    SessionInf information;
     ImageIcon icon = new ImageIcon("icon.png");
+    int[][] fieldList;
 
     public StartForm(){
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);// posice okna centrum
 
         JLabel errorLabel = new JLabel();
         errorLabel.setBounds(400/2 - 150/2,30,150, 40);
@@ -65,10 +64,17 @@ public class StartForm {
                     int port = Integer.parseInt(portTField.getText());
                     String nickname = nickTField.getText();
                     int roomNumber = Integer.parseInt(roomTField.getText());
-
-                    information = new SessionInf(port, ip, roomNumber, nickname);
                     Player.nickname = nickname;
+                    ServerCommunication server = new ServerCommunication(ip, port, roomNumber);
+
+                    fieldList = server.getField();
+
+                    Player.side = 1; // 1 - white side (2 - dark side)
                     frame.dispose();
+
+                    GameFieldThread gameThread = new GameFieldThread(server);
+                    gameThread.start();
+
 
                 }catch (Exception ex){
                     errorLabel.setText("Error: something is wrong");
@@ -78,9 +84,10 @@ public class StartForm {
             }
         });
 
-
         frame.setSize(400,500);//400 width and 500 height
+
         frame.setLayout(null);//using no layout managers
+        frame.setLocationRelativeTo(null);// posice okna centrum
         frame.setVisible(true);//making the frame visible
         frame.setIconImage(icon.getImage());
         frame.setResizable(false);
