@@ -278,18 +278,14 @@ public class DrawingPanel extends JPanel {
 
                 if (isOnField(movingCellXY) && !movingCellXY.equals(clickedCell.getCoord())) {
                     if (checkers[movingCellXY.getY()][movingCellXY.getX()] == 0) {
-
                         List<CoordXY> newCoords = processingCell(movingCellXY, neighborXY);
-
-                            coords.add(movingCellXY);
-                            coords.addAll(newCoords);
-
+                        coords.add(movingCellXY);
+                        coords.addAll(newCoords);
                     }
                 }
 
             }
         }
-
         return coords;
     }
 
