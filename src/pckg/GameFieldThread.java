@@ -3,6 +3,7 @@ package pckg;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.net.URL;
 
 public class GameFieldThread extends Thread {
@@ -10,7 +11,7 @@ public class GameFieldThread extends Thread {
     Game game;
     ImageIcon icon = new ImageIcon("icon.png");
 
-    public GameFieldThread(ServerCommunication server){
+    public GameFieldThread(ServerCommunication server) throws IOException {
         this.game = new Game(server);
 
     }

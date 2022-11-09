@@ -1,5 +1,6 @@
 package pckg;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class Game {
     ClickedCell clickedCell;
     ServerCommunication server;
 
-    public Game(ServerCommunication server){
+    public Game(ServerCommunication server) throws IOException {
 
         this.server = server;
         isClicked = false;
@@ -29,16 +30,15 @@ public class Game {
         if (isClicked) {
             List<CoordXY> path = clickedCell.getPotencialPath();
 
-            for (int i = 0; i < path.size(); i++) {
+            for (CoordXY coordXY : path) {
 
-                if (path.get(i).getX() == mirrorCoord.getX() && path.get(i).getY() == mirrorCoord.getY()) {
-
+                if (coordXY.getX() == mirrorCoord.getX() && coordXY.getY() == mirrorCoord.getY()) {
                     // mirroring of 'end' because here we working with matrix on "server"
-                    CoordXY endXY = new CoordXY(path.get(i).getX(), path.get(i).getY());
+                    CoordXY endXY = new CoordXY(coordXY.getX(), coordXY.getY());
                     CoordXY startXY = new CoordXY(clickedCell.getCoord().getX(), clickedCell.getCoord().getY());
 
-                    if(path.get(i).getDeletedCecker() != null){
-                        deleteChecker(path.get(i).getDeletedCecker());
+                    if (coordXY.getDeletedCecker() != null) {
+                        deleteChecker(coordXY.getDeletedCecker());
                     }
                     moveChecker(startXY, endXY);
                     clickedCell = new ClickedCell();
@@ -164,8 +164,6 @@ public class Game {
         checkersField[end.getY()][end.getX()] = Player.side;
 
     }
-
-
 
     public int[][] getCheckersField() {
         return checkersField;

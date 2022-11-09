@@ -77,9 +77,7 @@ public class StartForm {
                     Player.nickname = nickname;
                     ServerCommunication server = new ServerCommunication(ip, port, roomNumber);
 
-                    fieldList = server.getStartedField();
-
-                    Player.side = 1; // 1 - white side (2 - dark side)
+                    Player.side = 2; // 1 - white side (2 - dark side)
                     frame.dispose();
 
                     GameFieldThread gameThread = new GameFieldThread(server);
@@ -88,6 +86,7 @@ public class StartForm {
 
                 }catch (Exception ex){
                     errorLabel.setText("Error: something is wrong");
+                    System.out.println(ex.toString());
                     errorLabel.setForeground(Color.RED);
                 }
 
