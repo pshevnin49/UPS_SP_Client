@@ -26,7 +26,11 @@ public class DrawingPanel extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                game.mouseClick(e.getX(), e.getY());
+                try {
+                    game.mouseClick(e.getX(), e.getY());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 repaint();
             }
 
@@ -64,6 +68,10 @@ public class DrawingPanel extends JPanel {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public void repaintPanel(){
+        repaint();
     }
 
     private void drawField(Graphics2D g) {

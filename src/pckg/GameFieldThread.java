@@ -10,12 +10,14 @@ public class GameFieldThread extends Thread {
 
     Game game;
     ImageIcon icon = new ImageIcon("icon.png");
+    ServerCommunication server;
 
     public GameFieldThread(ServerCommunication server) throws IOException {
+
+        this.server = server;
         this.game = new Game(server);
 
     }
-
 
     public void run(){
 
@@ -27,6 +29,8 @@ public class GameFieldThread extends Thread {
         frame.setIconImage(icon.getImage());
 
         DrawingPanel panel = new DrawingPanel(game);
+
+        game.setPanel(panel);
 
         frame.add(panel);
 

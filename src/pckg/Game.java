@@ -10,9 +10,11 @@ public class Game {
     boolean isClicked;
     ClickedCell clickedCell;
     ServerCommunication server;
+    DrawingPanel panel;
 
     public Game(ServerCommunication server) throws IOException {
 
+        this.panel = panel;
         this.server = server;
         isClicked = false;
         clickedCell = new ClickedCell();
@@ -20,7 +22,7 @@ public class Game {
 
     }
 
-    public void mouseClick(int x, int y) {
+    public void mouseClick(int x, int y) throws IOException {
 
         int xCell = x / 75;
         int yCell = y / 75;
@@ -40,7 +42,17 @@ public class Game {
                     if (coordXY.getDeletedCecker() != null) {
                         deleteChecker(coordXY.getDeletedCecker());
                     }
+
                     moveChecker(startXY, endXY);
+
+                    System.out.println("Move");
+
+                    panel.repaintPanel();
+
+                    MoveInf move = server.move(startXY, endXY); // temporarily
+                    moveChecker(move.from, move.to);
+                    server.closeServer();
+
                     clickedCell = new ClickedCell();
                     isClicked = false;
                     continue;
@@ -162,7 +174,12 @@ public class Game {
 
         checkersField[start.getY()][start.getX()] = 0;
         checkersField[end.getY()][end.getX()] = Player.side;
+        panel.repaint();
 
+    }
+
+    public void setPanel(DrawingPanel panel){
+        this.panel = panel;
     }
 
     public int[][] getCheckersField() {

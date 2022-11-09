@@ -15,6 +15,7 @@ public class StartForm {
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setBackground(new Color(111, 92, 78));
+        frame.setTitle("Connection form");
 
         JLabel errorLabel = new JLabel();
         errorLabel.setBounds(400/2 - 150/2,30,150, 40);
@@ -25,7 +26,7 @@ public class StartForm {
         ipLabel.setBounds(400/2 - 65/2,60,65, 40);
         frame.add(ipLabel);
 
-        JTextField ipTField = new JTextField();
+        JTextField ipTField = new JTextField("127.0.0.1");
         ipTField.setBackground(new Color(183, 165, 153));
         ipTField.setBounds(400/2 - 200/2,90,200, 20);
         frame.add(ipTField);
@@ -35,7 +36,7 @@ public class StartForm {
         portLabel.setBounds(400/2 - 30/2,100,30, 40);
         frame.add(portLabel);
 
-        JTextField portTField = new JTextField();
+        JTextField portTField = new JTextField("1");
         portTField.setBackground(new Color(183, 165, 153));
         portTField.setBounds(400/2 - 200/2,130,200, 20);
         frame.add(portTField);
@@ -45,7 +46,7 @@ public class StartForm {
         nickLabel.setBounds(400/2 - 60/2,140,60, 40);
         frame.add(nickLabel);
 
-        JTextField nickTField = new JTextField();
+        JTextField nickTField = new JTextField("pavel");
         nickTField.setBackground(new Color(183, 165, 153));
         nickTField.setBounds(400/2 - 200/2,170,200, 20);
         frame.add(nickTField);
@@ -55,7 +56,7 @@ public class StartForm {
         roomLabel.setBounds(400/2 - 90/2,180,90, 40);
         frame.add(roomLabel);
 
-        JTextField roomTField = new JTextField();
+        JTextField roomTField = new JTextField("1");
         roomTField.setBackground(new Color(183, 165, 153));
         roomTField.setBounds(400/2 - 200/2,210,200, 20);
         frame.add(roomTField);
@@ -78,11 +79,11 @@ public class StartForm {
                     ServerCommunication server = new ServerCommunication(ip, port, roomNumber);
 
                     Player.side = 2; // 1 - white side (2 - dark side)
-                    frame.dispose();
 
                     GameFieldThread gameThread = new GameFieldThread(server);
                     gameThread.start();
 
+                    frame.dispose();
 
                 }catch (Exception ex){
                     errorLabel.setText("Error: something is wrong");
