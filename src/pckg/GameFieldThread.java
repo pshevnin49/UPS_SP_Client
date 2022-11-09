@@ -7,14 +7,11 @@ import java.net.URL;
 
 public class GameFieldThread extends Thread {
 
-    int[][] fieldList; // all figures on the field
-
-
-
+    Game game;
     ImageIcon icon = new ImageIcon("icon.png");
 
     public GameFieldThread(ServerCommunication server){
-        this.fieldList = server.getField();
+        this.game = new Game(server);
 
     }
 
@@ -28,7 +25,7 @@ public class GameFieldThread extends Thread {
         frame.setResizable(false);
         frame.setIconImage(icon.getImage());
 
-        DrawingPanel panel = new DrawingPanel(fieldList);
+        DrawingPanel panel = new DrawingPanel(game);
 
         frame.add(panel);
 

@@ -12,7 +12,7 @@ public class ServerCommunication {
         this.roomNumber = roomNumber;
     }
 
-    public int[][] getField(){
+    public int[][] getStartedField(){
         int[][] fieldList = {{0, 1, 0, 1, 0, 1, 0, 1},
                 {1, 0, 1, 0, 1, 0, 1, 0},
                 {0, 1, 0, 1, 0, 1, 0, 1},
