@@ -31,7 +31,7 @@ public class DrawingPanel extends JPanel {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-                repaint();
+                //repaint();
             }
 
             @Override
@@ -70,9 +70,6 @@ public class DrawingPanel extends JPanel {
 
     }
 
-    public void repaintPanel(){
-        repaint();
-    }
 
     private void drawField(Graphics2D g) {
         //int cellSize = 600/8; // 800 will be changed on real window size

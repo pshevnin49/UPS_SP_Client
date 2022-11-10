@@ -1,5 +1,6 @@
 package pckg;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,13 +12,15 @@ public class Game {
     ClickedCell clickedCell;
     ServerCommunication server;
     DrawingPanel panel;
+    int movingSide;
+    JFrame frame;
 
     public Game(ServerCommunication server) throws IOException {
 
-        this.panel = panel;
         this.server = server;
         isClicked = false;
         clickedCell = new ClickedCell();
+        movingSide = 2;
         this.checkersField = server.getStartedField();
 
     }
@@ -33,9 +36,8 @@ public class Game {
             List<CoordXY> path = clickedCell.getPotencialPath();
 
             for (CoordXY coordXY : path) {
-
                 if (coordXY.getX() == mirrorCoord.getX() && coordXY.getY() == mirrorCoord.getY()) {
-                    // mirroring of 'end' because here we working with matrix on "server"
+
                     CoordXY endXY = new CoordXY(coordXY.getX(), coordXY.getY());
                     CoordXY startXY = new CoordXY(clickedCell.getCoord().getX(), clickedCell.getCoord().getY());
 
@@ -43,11 +45,19 @@ public class Game {
                         deleteChecker(coordXY.getDeletedCecker());
                     }
 
+                    System.out.println("Move checker");
                     moveChecker(startXY, endXY);
 
-                    System.out.println("Move");
+                    System.out.println("Befor repaint");
+                    panel.repaint();
 
-                    panel.repaintPanel();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    System.out.println("After repaint");
 
                     MoveInf move = server.move(startXY, endXY); // temporarily
                     moveChecker(move.from, move.to);
@@ -55,7 +65,7 @@ public class Game {
 
                     clickedCell = new ClickedCell();
                     isClicked = false;
-                    continue;
+                    break;
 
                 }
             }
@@ -68,6 +78,7 @@ public class Game {
             coordXY.setY(yCell);
             clickedCell.setCoord(mirrorCoord);
             possibleMoves(clickedCell);
+            panel.repaint();
         }
 
         System.out.println(mirrorCoord.getX() + " - x, " + mirrorCoord.getY() + " - y");
@@ -173,9 +184,13 @@ public class Game {
     private void moveChecker(CoordXY start, CoordXY end) {
 
         checkersField[start.getY()][start.getX()] = 0;
-        checkersField[end.getY()][end.getX()] = Player.side;
-        panel.repaint();
+        checkersField[end.getY()][end.getX()] = movingSide;
+        //panel.repaint();
 
+    }
+
+    public void setJFrame(JFrame frame){
+        this.frame = frame;
     }
 
     public void setPanel(DrawingPanel panel){

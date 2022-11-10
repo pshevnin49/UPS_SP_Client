@@ -29,10 +29,10 @@ public class GameFieldThread extends Thread {
         frame.setIconImage(icon.getImage());
 
         DrawingPanel panel = new DrawingPanel(game);
-
         game.setPanel(panel);
-
+        game.setJFrame(frame);
         frame.add(panel);
+
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);// posice okna centrum

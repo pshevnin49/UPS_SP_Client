@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class ServerCommunication {
+public class ServerCommunication extends Thread{
 
     String ip;
     int port;
