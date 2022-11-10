@@ -48,20 +48,9 @@ public class Game {
                     System.out.println("Move checker");
                     moveChecker(startXY, endXY);
 
-                    System.out.println("Befor repaint");
                     panel.repaint();
 
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    System.out.println("After repaint");
-
-                    MoveInf move = server.move(startXY, endXY); // temporarily
-                    moveChecker(move.from, move.to);
-                    server.closeServer();
+                    server.move(startXY, endXY);
 
                     clickedCell = new ClickedCell();
                     isClicked = false;
@@ -181,12 +170,30 @@ public class Game {
 
     }
 
-    private void moveChecker(CoordXY start, CoordXY end) {
+    public synchronized void moveChecker(CoordXY start, CoordXY end) {
 
         checkersField[start.getY()][start.getX()] = 0;
         checkersField[end.getY()][end.getX()] = movingSide;
-        //panel.repaint();
+        switchMovingSide();
+        isClicked = false;
+        panel.repaint();
 
+    }
+
+    public void switchMovingSide(){
+        if(movingSide == 1){
+            movingSide = 2;
+        }else{
+            movingSide = 1;
+        }
+    }
+
+    public int getMovingSide(){
+        return movingSide;
+    }
+
+    public void setMovingSide(int movingSide){
+        this.movingSide = movingSide;
     }
 
     public void setJFrame(JFrame frame){

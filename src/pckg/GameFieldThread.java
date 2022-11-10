@@ -31,6 +31,7 @@ public class GameFieldThread extends Thread {
         DrawingPanel panel = new DrawingPanel(game);
         game.setPanel(panel);
         game.setJFrame(frame);
+        server.setGame(game);
         frame.add(panel);
 
 

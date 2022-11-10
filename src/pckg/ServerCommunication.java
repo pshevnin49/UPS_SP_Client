@@ -12,6 +12,8 @@ public class ServerCommunication extends Thread{
     Socket socket;
     BufferedReader br;
     PrintWriter pw;
+    Game game;
+
 
     public ServerCommunication(String ip, int port, int roomNumber) throws IOException {
         this.ip = "127.0.0.1";
@@ -38,9 +40,33 @@ public class ServerCommunication extends Thread{
 
         input = br.readLine();
         System.out.println(input);
+
+        this.start();
+
         int[][] fieldList = parsLine(input);
 
         return fieldList;
+    }
+
+    public void run(){
+        String input;
+
+        while(true){
+            try {
+                input = br.readLine();
+
+                if(input != null){
+                    CoordXY outFrom = new CoordXY(Character.digit(input.charAt(2), 10), Character.digit(input.charAt(3), 10));
+                    CoordXY outTo = new CoordXY(Character.digit(input.charAt(4), 10), Character.digit(input.charAt(5), 10));
+
+                    game.moveChecker(outFrom, outTo);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }
     }
 
     private void startServer() throws IOException {
@@ -57,8 +83,8 @@ public class ServerCommunication extends Thread{
         socket.close();
     }
 
-    public MoveInf move(CoordXY from, CoordXY to) throws IOException {
-        MoveInf move;
+    public void move(CoordXY from, CoordXY to) throws IOException {
+
         String output = "PT";
         output += from.getX();
         output += from.getY();
@@ -68,13 +94,7 @@ public class ServerCommunication extends Thread{
         pw.println(output);
         pw.flush();
 
-        String input = br.readLine();
 
-        CoordXY outFrom = new CoordXY(Character.digit(input.charAt(2), 10), Character.digit(input.charAt(3), 10));
-        CoordXY outTo = new CoordXY(Character.digit(input.charAt(4), 10), Character.digit(input.charAt(5), 10));
-
-        move = new MoveInf(outFrom, outTo);
-        return move;
     }
 
     private int[][] parsLine(String line){
@@ -89,5 +109,9 @@ public class ServerCommunication extends Thread{
             }
         }
         return matrix;
+    }
+
+    public void setGame(Game game){
+        this.game = game;
     }
 }

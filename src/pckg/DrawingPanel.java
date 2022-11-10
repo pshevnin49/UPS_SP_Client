@@ -121,7 +121,7 @@ public class DrawingPanel extends JPanel {
 
     private void drawClicked(Graphics2D g2) {
 
-        if (game.isClicked()) {
+        if (game.isClicked() && game.getMovingSide() == Player.side) {
             g2.setColor(new Color(79, 177, 105));
             System.out.println("Print clicked ");
             CoordXY mirrorRect = game.mirroredCoord(game.getClickedCell().getCoord().getX(), game.getClickedCell().getCoord().getY());
