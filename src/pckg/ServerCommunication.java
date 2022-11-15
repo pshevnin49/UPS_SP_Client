@@ -3,6 +3,8 @@ package pckg;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerCommunication extends Thread{
 
@@ -15,25 +17,24 @@ public class ServerCommunication extends Thread{
     Game game;
 
 
-    public ServerCommunication(String ip, int port, int roomNumber) throws IOException {
-        this.ip = "127.0.0.1";
-        this.port = 4;
-        this.roomNumber = roomNumber;
-        startServer();
-
+    public ServerCommunication(String ip, int port) throws IOException {
+        this.ip = "127.0.0.1"; // 192.168.56.101
+        this.port = 5;
+        //startServer();
     }
 
     public int[][] getStartedField() throws IOException {
-//        int[][] fieldList = {{0, 1, 0, 1, 0, 1, 0, 1},
-//                {1, 0, 1, 0, 1, 0, 1, 0},
-//                {0, 1, 0, 1, 0, 1, 0, 1},
-//                {0, 0, 0, 0, 0, 0, 0, 0},
-//                {0, 0, 0, 0, 0, 0, 0, 0},
-//                {2, 0, 2, 0, 2, 0, 2, 0},
-//                {0, 2, 0, 2, 0, 2, 0, 2},
-//                {2, 0, 2, 0, 2, 0, 2, 0}};
 
         String input = new String();
+        String output = "UPSconn";
+        String nickname = Player.nickname;
+        String nicknameLength = String.format("%04d", nickname.length());
+        String allLength = String.format("%04d", nickname.length() + 18);
+        String roomNumStr = String.format("%03d", roomNumber);
+
+        output = output + allLength + nicknameLength + nickname + roomNumStr;
+
+        System.out.println(output);
 
         pw.println("PT");
         pw.flush();
@@ -97,8 +98,17 @@ public class ServerCommunication extends Thread{
 
     }
 
+    public List<Room> getLobby(){
+        List<Room> rooms = new ArrayList<>();
+        for(int i = 0; i < 50; i++){
+            rooms.add(new Room(i+1, 1));
+        }
+        return rooms;
+    }
+
     private int[][] parsLine(String line){
         int index = 0;
+
         int[][] matrix = new int[8][8];
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){

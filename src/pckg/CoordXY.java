@@ -2,7 +2,6 @@ package pckg;
 
 
 public class CoordXY {
-
     int x;
     int y;
 
@@ -15,7 +14,6 @@ public class CoordXY {
     public CoordXY(int x, int y){
         this.x = x;
         this.y = y;
-
     }
 
     public CoordXY getDeletedCecker(){

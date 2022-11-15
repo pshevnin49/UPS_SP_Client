@@ -51,19 +51,19 @@ public class StartForm {
         nickTField.setBounds(400/2 - 200/2,170,200, 20);
         frame.add(nickTField);
 
-        JLabel roomLabel = new JLabel("room number:");
-        roomLabel.setForeground(new Color(183, 165, 153));
-        roomLabel.setBounds(400/2 - 90/2,180,90, 40);
-        frame.add(roomLabel);
+//        JLabel roomLabel = new JLabel("room number:");
+//        roomLabel.setForeground(new Color(183, 165, 153));
+//        roomLabel.setBounds(400/2 - 90/2,180,90, 40);
+//        frame.add(roomLabel);
+//
+//        JTextField roomTField = new JTextField("1");
+//        roomTField.setBackground(new Color(183, 165, 153));
+//        roomTField.setBounds(400/2 - 200/2,210,200, 20);
+//        frame.add(roomTField);
 
-        JTextField roomTField = new JTextField("1");
-        roomTField.setBackground(new Color(183, 165, 153));
-        roomTField.setBounds(400/2 - 200/2,210,200, 20);
-        frame.add(roomTField);
-
-        JButton startButton = new JButton("Start");
+        JButton startButton = new JButton("Connect");
         startButton.setBackground(new Color(183, 165, 153));
-        startButton.setBounds(400/2 - 100/2,350,100, 40);
+        startButton.setBounds(400/2 - 100/2,280,100, 40);
         frame.add(startButton);//adding button in JFrame
 
         startButton.addActionListener(new ActionListener() {
@@ -74,15 +74,12 @@ public class StartForm {
                     String ip = ipTField.getText();
                     int port = Integer.parseInt(portTField.getText());
                     String nickname = nickTField.getText();
-                    int roomNumber = Integer.parseInt(roomTField.getText());
+                    int roomNumber = 1;
                     Player.nickname = nickname;
-                    ServerCommunication server = new ServerCommunication(ip, port, roomNumber);
+                    ServerCommunication server = new ServerCommunication(ip, port);
 
                     Player.side = 2; // 1 - white side (2 - dark side)
-
-                    GameFieldThread gameThread = new GameFieldThread(server);
-                    gameThread.start();
-
+                    Lobby lobby = new Lobby(server);
                     frame.dispose();
 
                 }catch (Exception ex){
@@ -96,6 +93,7 @@ public class StartForm {
 
         frame.setSize(400,500);//400 width and 500 height
 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);//using no layout managers
         frame.setLocationRelativeTo(null);// posice okna centrum
         frame.setVisible(true);//making the frame visible

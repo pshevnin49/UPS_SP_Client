@@ -53,7 +53,6 @@ public class DrawingPanel extends JPanel {
         this.setFocusable(true);
     }
 
-
     public void paint(Graphics g) {
         super.paint(g);
 
@@ -69,7 +68,6 @@ public class DrawingPanel extends JPanel {
         }
 
     }
-
 
     private void drawField(Graphics2D g) {
         //int cellSize = 600/8; // 800 will be changed on real window size
@@ -132,10 +130,7 @@ public class DrawingPanel extends JPanel {
                 g2.fillRect(cellSize * coord.getX(), cellSize * coord.getY(), cellSize, cellSize);
             }
 
-        } else {
-
         }
-
     }
 
     private void drawChecker(Graphics2D g2, int x, int y, String imgName) throws IOException {

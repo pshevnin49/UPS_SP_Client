@@ -6,7 +6,7 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URL;
 
-public class GameFieldThread extends Thread {
+public class GameFieldThread {
 
     Game game;
     ImageIcon icon = new ImageIcon("icon.png");
@@ -19,7 +19,7 @@ public class GameFieldThread extends Thread {
 
     }
 
-    public void run(){
+    public void drawField(){
 
         JFrame frame = new JFrame();
         frame.setTitle("Checkers");
@@ -38,6 +38,8 @@ public class GameFieldThread extends Thread {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);// posice okna centrum
         frame.setVisible(true);
+
+        System.out.println("Vlakno se skoncilo ");
 
     }
 

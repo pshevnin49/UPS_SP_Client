@@ -31,46 +31,48 @@ public class Game {
         int yCell = y / 75;
 
         CoordXY mirrorCoord = mirroredCoord(xCell, yCell);
+        if(Player.side == movingSide){
+            if (isClicked) {
+                List<CoordXY> path = clickedCell.getPotencialPath();
 
-        if (isClicked) {
-            List<CoordXY> path = clickedCell.getPotencialPath();
+                for (CoordXY coordXY : path) {
+                    if (coordXY.getX() == mirrorCoord.getX() && coordXY.getY() == mirrorCoord.getY()) {
 
-            for (CoordXY coordXY : path) {
-                if (coordXY.getX() == mirrorCoord.getX() && coordXY.getY() == mirrorCoord.getY()) {
+                        CoordXY endXY = new CoordXY(coordXY.getX(), coordXY.getY());
+                        CoordXY startXY = new CoordXY(clickedCell.getCoord().getX(), clickedCell.getCoord().getY());
 
-                    CoordXY endXY = new CoordXY(coordXY.getX(), coordXY.getY());
-                    CoordXY startXY = new CoordXY(clickedCell.getCoord().getX(), clickedCell.getCoord().getY());
+                        if (coordXY.getDeletedCecker() != null) {
+                            deleteChecker(coordXY.getDeletedCecker());
+                        }
 
-                    if (coordXY.getDeletedCecker() != null) {
-                        deleteChecker(coordXY.getDeletedCecker());
+                        System.out.println("Move checker");
+                        moveChecker(startXY, endXY);
+
+                        panel.repaint();
+
+                        server.move(startXY, endXY);
+
+                        clickedCell = new ClickedCell();
+                        isClicked = false;
+                        break;
+
                     }
-
-                    System.out.println("Move checker");
-                    moveChecker(startXY, endXY);
-
-                    panel.repaint();
-
-                    server.move(startXY, endXY);
-
-                    clickedCell = new ClickedCell();
-                    isClicked = false;
-                    break;
-
                 }
             }
+
+            if (checkersField[mirrorCoord.getY()][mirrorCoord.getX()] == Player.side) {
+                isClicked = true;
+                CoordXY coordXY = new CoordXY();
+                coordXY.setX(xCell);
+                coordXY.setY(yCell);
+                clickedCell.setCoord(mirrorCoord);
+                possibleMoves(clickedCell);
+                panel.repaint();
+            }
+
+            System.out.println(mirrorCoord.getX() + " - x, " + mirrorCoord.getY() + " - y");
         }
 
-        if (checkersField[mirrorCoord.getY()][mirrorCoord.getX()] == Player.side) {
-            isClicked = true;
-            CoordXY coordXY = new CoordXY();
-            coordXY.setX(xCell);
-            coordXY.setY(yCell);
-            clickedCell.setCoord(mirrorCoord);
-            possibleMoves(clickedCell);
-            panel.repaint();
-        }
-
-        System.out.println(mirrorCoord.getX() + " - x, " + mirrorCoord.getY() + " - y");
     }
 
     public int[][] invCheckers(int[][] checkers) { // invert checkers field in y coords
